@@ -1,0 +1,100 @@
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: PersonalCard(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class PersonalCard extends StatelessWidget {
+  // URL ochish funksiyasi
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.blue, // Orqa fon ko‘k
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 60,
+                backgroundImage: AssetImage("images/asabooks.jpg"), // Dumaloq rasm
+              ),
+              SizedBox(height: 10),
+              Text(
+                'ASADBEK SAPARBAYEV',
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                'BOOKBLOGGER & NETWORK SECURITY',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white70,
+                ),
+              ),
+              SizedBox(height: 20),
+              buildContactCard(Icons.phone, '+99 98953430423'),
+              buildContactCard(Icons.email, 'azamatovichlive@gmail.com'),
+              buildClickableCard(Icons.telegram, 't.me/asabooks1', () {
+                _launchURL('https://t.me/asabooks1');
+              }),
+              buildClickableCard(Icons.camera_alt, 'Instagram: @asabooks_', () {
+                _launchURL('https://www.instagram.com/asabooks_');
+              }),
+              buildClickableCard(Icons.videocam, 'YouTube: @ASABOOKS', () {
+                _launchURL('https://www.youtube.com/@ASABOOKS');
+              }),
+              buildClickableCard(Icons.gamepad, 'Twitch: saagmr', () {
+                _launchURL('https://www.twitch.tv/saagmr');
+              }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildContactCard(IconData icon, String text) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.blue),
+        title: Text(text),
+      ),
+    );
+  }
+
+  Widget buildClickableCard(IconData icon, String text, VoidCallback onTap) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.blue),
+        title: Text(text),
+        onTap: onTap,
+      ),
+    );
+  }
+}
